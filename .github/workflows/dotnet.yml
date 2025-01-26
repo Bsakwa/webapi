@@ -17,19 +17,19 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Navigate to project directory
-      run: cd ../../UserApi
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x # Replace with your .NET version
 
     - name: Restore dependencies
+      working-directory: UserApi # Set the working directory for this step
       run: dotnet restore
 
     - name: Build
+      working-directory: UserApi # Set the working directory for this step
       run: dotnet build --no-restore
 
     - name: Test
+      working-directory: UserApi # Set the working directory for this step
       run: dotnet test --no-build --verbosity normal
