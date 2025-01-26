@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Navigate to project directory
-      run: cd UserApi
+      run: cd ../../UserApi
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
