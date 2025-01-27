@@ -1,0 +1,62 @@
+# Build Folders
+bin/
+obj/
+
+# User-Specific Files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# Rider IDE
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+
+# Resharper
+*.DotSettings.user
+_ReSharper*/
+
+# Package Files
+*.nupkg
+*.snupkg
+*.lock.json
+*.dylib
+*.so
+*.dll
+*.exe
+
+# Secrets
+secrets.json
+appsettings.Development.json
+
+# DotNet Tools
+*.db
+*.db-shm
+*.db-wal
+
+# Coverage
+*.coverage
+*.coveragexml
+*.testhost.*
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
