@@ -1,5 +1,9 @@
+// Program.cs
 using Microsoft.OpenApi.Models;
 using UserApi.Data;
+using UserApi.GraphQL.Types;
+using UserApi.GraphQL.Queries;
+using UserApi.GraphQL.Mutations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +15,27 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "UserApi", Version = "v1" });
 });
 
-// Register the DatabaseContext as a singleton
+// Register DatabaseContext
 builder.Services.AddSingleton<DatabaseContext>();
+
+// Add GraphQL services
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType<Query>()
+    .AddMutationType<Mutation>()
+    .AddType<UserType>();
+
+// Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -24,7 +47,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
+
 app.MapControllers();
+app.MapGraphQL("/graphql");
 
 app.Run();
