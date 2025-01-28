@@ -1,3 +1,4 @@
+// GraphQL/Mutations/Mutation.cs
 using Dapper;
 using HotChocolate;
 using UserApi.Data;
@@ -9,7 +10,6 @@ namespace UserApi.GraphQL.Mutations
     public class Mutation
     {
         private readonly DatabaseContext _context;
-
         public Mutation(DatabaseContext context)
         {
             _context = context;
@@ -24,8 +24,6 @@ namespace UserApi.GraphQL.Mutations
                 "CALL insert_user(@Username, @Email, @PasswordHash)",
                 new { input.Username, input.Email, input.PasswordHash }
             );
-
-            // Fetch the created user
             return await conn.QueryFirstOrDefaultAsync<User>(
                 "SELECT * FROM get_user_by_email(@Email)",
                 new { input.Email }
@@ -38,15 +36,15 @@ namespace UserApi.GraphQL.Mutations
             using var conn = _context.GetConnection();
             
             await conn.ExecuteAsync(
-                "CALL update_user(@UserId, @Username, @Email, @PasswordHash)",
+                "CALL update_user(@UserId, @Username, @Email, @PasswordHash, @Status)",
                 new { 
                     input.UserId,
                     input.Username,
                     input.Email,
-                    input.PasswordHash
+                    input.PasswordHash,
+                    input.Status
                 }
             );
-
             return await conn.QueryFirstOrDefaultAsync<User>(
                 "SELECT * FROM get_user_by_id(@UserId)",
                 new { input.UserId }
@@ -60,6 +58,28 @@ namespace UserApi.GraphQL.Mutations
             await conn.ExecuteAsync(
                 "CALL delete_user(@UserId)",
                 new { UserId = id }
+            );
+            return true;
+        }
+
+        [GraphQLDescription("Bulk block users")]
+        public async Task<bool> BulkBlockUsers(int[] userIds)
+        {
+            using var conn = _context.GetConnection();
+            await conn.ExecuteAsync(
+                "CALL bulk_block_users(@UserIds)",
+                new { UserIds = userIds }
+            );
+            return true;
+        }
+
+        [GraphQLDescription("Bulk activate users")]
+        public async Task<bool> BulkActivateUsers(int[] userIds)
+        {
+            using var conn = _context.GetConnection();
+            await conn.ExecuteAsync(
+                "CALL bulk_activate_users(@UserIds)",
+                new { UserIds = userIds }
             );
             return true;
         }
