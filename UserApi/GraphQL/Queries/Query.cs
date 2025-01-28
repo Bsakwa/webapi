@@ -25,7 +25,8 @@ namespace UserApi.GraphQL.Queries
                     username AS Username, 
                     email AS Email, 
                     created_at AS CreatedAt, 
-                    updated_at AS UpdatedAt 
+                    updated_at AS UpdatedAt,
+                    status AS Status
                 FROM get_all_users()");
         }
 
@@ -39,7 +40,8 @@ namespace UserApi.GraphQL.Queries
                     username AS Username, 
                     email AS Email, 
                     created_at AS CreatedAt, 
-                    updated_at AS UpdatedAt 
+                    updated_at AS UpdatedAt,
+                    status AS Status
                 FROM get_user_by_id(@UserId)",
                 new { UserId = id });
         }

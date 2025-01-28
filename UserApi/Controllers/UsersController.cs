@@ -54,7 +54,8 @@ namespace UserApi.Controllers
                                 Username = reader.GetString(1),
                                 Email = reader.GetString(2),
                                 CreatedAt = reader.GetDateTime(3),
-                                UpdatedAt = reader.GetDateTime(4)
+                                UpdatedAt = reader.GetDateTime(4),
+                                Status = reader.GetString(5)
                             };
                             return Ok(user);
                         }
@@ -84,7 +85,8 @@ namespace UserApi.Controllers
                                 Username = reader.GetString(1),
                                 Email = reader.GetString(2),
                                 CreatedAt = reader.GetDateTime(3),
-                                UpdatedAt = reader.GetDateTime(4)
+                                UpdatedAt = reader.GetDateTime(4),
+                                Status = reader.GetString(5)
                             };
                             users.Add(user);
                         }
@@ -101,12 +103,13 @@ namespace UserApi.Controllers
             using (var conn = _context.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand("CALL update_user(@user_id, @username, @email, @password_hash)", conn))
+                using (var cmd = new NpgsqlCommand("CALL update_user(@user_id, @username, @email, @password_hash, @status)", conn))
                 {
                     cmd.Parameters.AddWithValue("user_id", id);
                     cmd.Parameters.AddWithValue("username", user.Username);
                     cmd.Parameters.AddWithValue("email", user.Email);
                     cmd.Parameters.AddWithValue("password_hash", user.PasswordHash);
+                    cmd.Parameters.AddWithValue("status", user.Status);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -123,6 +126,38 @@ namespace UserApi.Controllers
                 using (var cmd = new NpgsqlCommand("CALL delete_user(@user_id)", conn))
                 {
                     cmd.Parameters.AddWithValue("user_id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            return Ok();
+        }
+
+        // Endpoint for bulk blocking users
+        [HttpPut("bulk-block")]
+        public IActionResult BulkBlockUsers([FromBody] int[] userIds)
+        {
+            using (var conn = _context.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("CALL bulk_block_users(@user_ids)", conn))
+                {
+                    cmd.Parameters.AddWithValue("user_ids", userIds);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            return Ok();
+        }
+
+        // Endpoint for bulk activating users
+        [HttpPut("bulk-activate")]
+        public IActionResult BulkActivateUsers([FromBody] int[] userIds)
+        {
+            using (var conn = _context.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("CALL bulk_activate_users(@user_ids)", conn))
+                {
+                    cmd.Parameters.AddWithValue("user_ids", userIds);
                     cmd.ExecuteNonQuery();
                 }
             }

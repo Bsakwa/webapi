@@ -13,6 +13,7 @@ namespace UserApi.GraphQL.Types
             descriptor.Field(f => f.PasswordHash).Ignore(); // Don't expose password hash
             descriptor.Field(f => f.CreatedAt).Type<NonNullType<DateTimeType>>();
             descriptor.Field(f => f.UpdatedAt).Type<NonNullType<DateTimeType>>();
+            descriptor.Field(f => f.Status).Type<NonNullType<StringType>>();
         }
     }
 }

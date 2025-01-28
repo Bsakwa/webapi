@@ -8,5 +8,6 @@ namespace UserApi.Models
         public string PasswordHash { get; set; } = string.Empty; // Initialize with default value
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }
