@@ -4,6 +4,7 @@ using UserApi.Data;
 using UserApi.GraphQL.Types;
 using UserApi.GraphQL.Queries;
 using UserApi.GraphQL.Mutations;
+using UserApi.GraphQL.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,8 @@ builder.Services
     .AddGraphQLServer()
     .AddQueryType<Query>()
     .AddMutationType<Mutation>()
-    .AddType<UserType>();
+    .AddType<UserType>()
+    .AddErrorFilter<CustomErrorFilter>();
 
 // Enable CORS
 builder.Services.AddCors(options =>
